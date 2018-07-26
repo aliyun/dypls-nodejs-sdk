@@ -27,6 +27,7 @@ const queueName = 'Alicom-Queue-13635054xxxxxx-'
 //初始化sms_client
 let plsClient = new PLSClient({ accessKeyId, secretAccessKey })
 const PoolKey = 'FC100000xxxxxx'
+
 // 绑定Axb号码示例方法
 plsClient.bindAxb({
   PoolKey,
@@ -35,31 +36,10 @@ plsClient.bindAxb({
   Expiration: '2018-08-05 12:00:00'
 }).then(function (res) {
   console.log('绑定axb成功', res)
-  const { SecretNo, SubsId } = res.SecretBindDTO;
-  return plsClient.querySubscriptionDetail({
-    PoolKey,
-    SubsId,
-    PhoneNoX: SecretNo,
-  })
 }, function (err) {
   console.log('绑定axb失败', err)
-}).then(function (res) {
-  console.log('查询绑定详情', arguments)
-  const { PhoneNoX, SubsId } = res.SecretBindDetailDTO;
-  return plsClient.updateSubscription({
-    PoolKey,
-    SubsId,
-    PhoneNoX,
-    OperateType: 'updateExpire',
-    Expiration: '2018-08-06 12:00:00'
-  })
-}, function (err) {
-  console.log('查询绑定详情失败', err)
-}).then(function (res) {
-  console.log('更新绑定关系成功', arguments)
-}, function (err) {
-  console.log('更新绑定关系失败', arguments)
 })
+
 // 更新绑定关系
 plsClient.updateSubscription({
     PoolKey,
