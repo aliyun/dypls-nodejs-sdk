@@ -6,7 +6,8 @@
 
 ### 使用方法
 1. 安装@alicloud/pls-sdk,请需要根据官方文档做一些配置
-2. 产品文档: https://dypls.console.aliyun.com/dypls.htm
+2. 产品文档: https://help.aliyun.com/document_detail/59773.html
+3. 号码隐私保护控制台: https://dypls.console.aliyun.com/dypls.htm
 3. Node.js版本 >= v4.6.0
 4. 不支持在浏览器上使用
 
@@ -25,7 +26,7 @@ const secretAccessKey = 'yourAccessKeySecret'
 //在云通信页面开通相应业务消息后，就能在页面上获得对应的queueName,不用填最后面一段
 const queueName = 'Alicom-Queue-13635054xxxxxx-'
 //初始化sms_client
-let plsClient = new PLSClient({ accessKeyId, secretAccessKey })
+const plsClient = new PLSClient({ accessKeyId, secretAccessKey })
 const PoolKey = 'FC100000xxxxxx'
 
 // 绑定Axb号码示例方法
@@ -48,47 +49,47 @@ plsClient.updateSubscription({
     OperateType: 'updateExpire',
     Expiration: '2018-08-06 12:00:00'
   }).then(function (res) {
-  console.log('查询录音文件', res)
+  console.log('更新绑定关系', res)
 }, function (err) {
-  console.log('查询录音文件失败', err)
+  console.log('更新绑定关系失败', err)
 })
 
 //查询绑定关系详情
 plsClient.querySubscriptionDetail({
-  PoolKey: 'FC100000014418001',
+  PoolKey,
   SubsId: '18040580000',
   PhoneNoX: '15800000000',
 }).then(function (res) {
-  console.log('绑定axn', res)
+  console.log('查询绑定关系详情', res)
 }, function (err) {
-  console.log('绑定axn失败', err)
+  console.log('查询绑定关系详情失败', err)
 })
 
 // 查询通话录音下载链接
 plsClient.queryRecordFileDownloadUrl({
-  PoolKey: 'FC100000014418001',
+  PoolKey,
   CallId: 'abcedf1234',
   CallTime: '2018-09-05 12:00:00',
 }).then(function (res) {
-  console.log('绑定axn', res)
+  console.log('查询通话录音下载链接', res)
 }, function (err) {
-  console.log('绑定axn失败', err)
+  console.log('查询通话录音下载链接失败', err)
 })
 
 // 解绑关系
 plsClient.unbindSubscription({
-  PoolKey: 'FC100000014418001',
+  PoolKey,
   SubsId: '18040580000',
   SecretNo: '15800000000',
 }).then(function (res) {
   console.log('解绑', res)
 }, function (err) {
-  console.log('解绑', err)
+  console.log('解绑失败', err)
 })
 
 // 绑定Axn号码示例方法
-plsClient.bindAxb({
-  PoolKey: 'FC100000014418001',
+plsClient.bindAxn({
+  PoolKey,
   PhoneNoA: '18040580000',
   PhoneNoB: '15800000000',
   Expiration: '2018-08-05 12:00:00'
@@ -100,7 +101,7 @@ plsClient.bindAxb({
 
 // AXN分机复用绑定示例
 plsClient.bindAxnExtension({
-  PoolKey: 'FC100000014418001',
+  PoolKey,
   PhoneNoA: '18040580000',
   PhoneNoB: '15800000000',
   Extension: '001',
