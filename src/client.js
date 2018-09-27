@@ -1,7 +1,7 @@
 /**
  * Copyright(c) Alibaba Group Holding Limited.
  *
- * @file:     sms-sdk
+ * @file:     pls-sdk
  * @authors:  qiankun <chuck.ql@alibaba-inc.com> (https://work.alibaba-inc.com/work/u/85053)
  * @date      18/1/31
  */
@@ -10,8 +10,8 @@
 const DyplsapiClient = require('@alicloud/dyplsapi-2017-05-25')
 const DybaseapiClient = require('@alicloud/dybaseapi')
 const MNSClient = require('@alicloud/mns')
-// 短信回执报告：SmsReport，短信上行：SmsUp
-const msgTypeList = ["SecretReport", "SmsUp"]
+// 小号呼叫状态回执/录音状态报告接收/短信内容报告接受:SmsReport/SecretRecording/SecretSmsIntercept
+const msgTypeList = ["SecretReport", "SecretRecording", "SecretSmsIntercept"]
 const DYPLSAPI_ENDPOINT = 'http://dyplsapi.aliyuncs.com'
 const DYBASEAPI_ENDPOINT = 'http://dybaseapi.aliyuncs.com'
 
@@ -156,13 +156,13 @@ class SMSClient {
   }
 
   //获取token
-  _getToken(type) {
+  _getToken(type, queueName) {
     let msgType = msgTypeList[type]
-    return this.dybaseClient.queryTokenForMnsQueue({ MessageType: msgType })
+    return this.dybaseClient.queryTokenForMnsQueue({ MessageType: msgType, queueName: queueName })
   }
 
   //根据类型获取mnsclient实例
-  async _getMNSClient(type) {
+  async _getMNSClient(type, queueName) {
     if (this.mnsClient && (this.mnsClient[type] instanceof MNSClient) && this._refresh(type)) {
       return this.mnsClient[type]
     }
@@ -172,7 +172,7 @@ class SMSClient {
         AccessKeyId,
         AccessKeySecret
       }
-    } = await this._getToken(type)
+    } = await this._getToken(type, queueName)
     if (!(AccessKeyId && AccessKeySecret && SecurityToken)) {
       throw new TypeError('get token fail')
     }
@@ -191,9 +191,14 @@ class SMSClient {
     return mnsClient
   }
 
-  async receiveMsg( preQueueName, waitSeconds = 10) {
-    let mnsClient = await this._getMNSClient(0)
-    return await mnsClient.receiveMessage(preQueueName + msgTypeList[0], waitSeconds)
+  async receiveMsg(type, queueName, waitSeconds = 10, isDel = false) {
+    let mnsClient = await this._getMNSClient(type, queueName)
+    const res = await mnsClient.receiveMessage(queueName, waitSeconds)
+    const { code, body: { ReceiptHandle } } = res;
+    if (isDel && code === 200 && ReceiptHandle) {
+      await mnsClient.deleteMessage(queueName, ReceiptHandle)
+    }
+    return res;
   }
 }
 

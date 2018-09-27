@@ -23,8 +23,8 @@ const PLSClient = require('@alicloud/pls-sdk')
 // ACCESS_KEY_ID/ACCESS_KEY_SECRET 根据实际申请的账号信息进行替换
 const accessKeyId = 'yourAccessKeyId'
 const secretAccessKey = 'yourAccessKeySecret'
-//在云通信页面开通相应业务消息后，就能在页面上获得对应的queueName,不用填最后面一段
-const queueName = 'Alicom-Queue-13635054xxxxxx-'
+//在云通信页面开通相应业务消息后，就能在页面上获得对应的queueName
+const queueName = 'Alicom-Queue-13635054xxxxxx-SecretReport-100000'
 //初始化sms_client
 const plsClient = new PLSClient({ accessKeyId, secretAccessKey })
 const PoolKey = 'FC100000xxxxxx'
@@ -113,8 +113,13 @@ plsClient.bindAxnExtension({
 })
 
 
-// 处理回执消息
-plsClient.receiveMsg(queueName).then(function (res) {
+/**
+ * @param type: 0/1/2 对应 小号呼叫状态回执/录音状态报告接收/短信内容报告接受
+ * @param queueName 队列名称，必须是type下的队列
+ * @param waitSeconds 队列等待时间，如果没有删除该消息，过了等待时间后会重新推送
+ * @param isDel 是否删除消息
+ */
+plsClient.receiveMsg(type,queueName, waitSeconds = 10, isDel = false).then(function (res) {
   //消息体需要base64解码
   let { code, body } = res
   if (code === 200) {
