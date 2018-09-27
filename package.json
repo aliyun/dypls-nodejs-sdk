@@ -1,6 +1,6 @@
 {
   "name": "@alicloud/pls-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "阿里云-云通信-号码隐私保护产品SDK",
   "keywords": [
     "SDK",
