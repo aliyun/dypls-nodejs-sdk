@@ -29,6 +29,29 @@ const queueName = 'Alicom-Queue-13635054xxxxxx-SecretReport-100000'
 const plsClient = new PLSClient({ accessKeyId, secretAccessKey })
 const PoolKey = 'FC100000xxxxxx'
 
+// 购买号码
+plsClient.buySecretNo({
+  PoolKey,
+  SpecId: 1,
+  City: '杭州',
+  SecretNo: '130'
+}).then(function (res) {
+  console.log('购买成功', res)
+}, function (err) {
+  console.log('购买失败', err)
+})
+
+// 释放号码
+plsClient.releaseSecretNo({
+  PoolKey,
+  SecretNo: '13000000000'
+}).then(function (res) {
+  console.log('释放成功', res)
+}, function (err) {
+  console.log('释放失败', err)
+})
+
+
 // 绑定Axb号码示例方法
 plsClient.bindAxb({
   PoolKey,

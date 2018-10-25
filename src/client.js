@@ -39,6 +39,32 @@ class SMSClient {
    * @param {Long} OwnerId - ownerId. optional.
    * @param {String} ResourceOwnerAccount - resourceOwnerAccount. optional.
    * @param {Long} ResourceOwnerId - resourceOwnerId. optional.
+   * @param {String} PoolKey - poolKey. required.
+   * @param {String} SecretNo - secretNo. required.
+   */
+  releaseSecretNo(params = {}, options = {}) {
+    return this.dyplsapiClient.releaseSecretNo(params, options);
+  }
+
+  /**
+   * @param {String} AccessKeyId - appKey. optional.
+   * @param {Long} OwnerId - ownerId. optional.
+   * @param {String} ResourceOwnerAccount - resourceOwnerAccount. optional.
+   * @param {Long} ResourceOwnerId - resourceOwnerId. optional.
+   * @param {String} PoolKey - poolKey. required.
+   * @param {Long} SpecId - specId. required.
+   * @param {String} City - city. required.
+   * @param {String} SecretNo - secretNo. optional.
+   */
+  buySecretNo(params = {}, options = {}) {
+    return this.dyplsapiClient.buySecretNo(params, options);
+  }
+
+  /**
+   * @param {String} AccessKeyId - appKey. optional.
+   * @param {Long} OwnerId - ownerId. optional.
+   * @param {String} ResourceOwnerAccount - resourceOwnerAccount. optional.
+   * @param {Long} ResourceOwnerId - resourceOwnerId. optional.
    * @param {String} PoolKey - poolKey. optional.
    * @param {String} PhoneNoA - phoneNoA. required.
    * @param {String} PhoneNoB - phoneNoB. required.
